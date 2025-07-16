@@ -32,7 +32,7 @@ def send_rishta_details(name, phone, age, gender):
         return None
 
     message = (
-        f"💌 Rishta Card 💌\n"
+        f"Assalam u Alaikum! \n"
         f"Name: {name}\n"
         f"Age: {age}\n"
         f"Gender: {gender}\n"
