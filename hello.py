@@ -10,7 +10,31 @@ load_dotenv()
 INSTANCE_ID = os.getenv("INSTANCE_ID")
 TOKEN = os.getenv("TOKEN")
 
-# Save submissions to CSV
+# Rishta list
+people = [
+    {"name": "Muneeb", "age": 22},
+    {"name": "Muhammad Ubaid Hussain", "age": 25},
+    {"name": "Azan", "age": 19},
+    {"name": "Hassan", "age": 24},
+    {"name": "Zain", "age": 20},
+    {"name": "Ali", "age": 23},
+    {"name": "Saad", "age": 21},
+    {"name": "Areeb", "age": 26},
+    {"name": "Talha", "age": 22},
+    {"name": "Fahad", "age": 24},
+    {"name": "Junaid", "age": 23},
+    {"name": "Hamza", "age": 20},
+    {"name": "Daniyal", "age": 25},
+    {"name": "Rehan", "age": 22},
+    {"name": "Shayan", "age": 21},
+    {"name": "Ibrahim", "age": 20},
+    {"name": "Sameer", "age": 23},
+    {"name": "Abdullah", "age": 19},
+    {"name": "Usman", "age": 24},
+    {"name": "Salman", "age": 26}
+]
+
+# Save to CSV
 def save_to_csv(name, phone, age, gender):
     data = {
         "name": [name],
@@ -25,21 +49,27 @@ def save_to_csv(name, phone, age, gender):
     else:
         df.to_csv("submissions.csv", index=False)
 
-# Send message function
+# Send WhatsApp Message
 def send_rishta_details(name, phone, age, gender):
     if not phone.startswith("+"):
         st.error("❌ Phone number must start with + (e.g., +923001234567)")
         return None
 
+    matched_rishtas = [p for p in people if abs(p["age"] - age) <= 2]
+
+    if not matched_rishtas:
+        rishta_list = "😔 Koi rishta nahi mila aapki age ke aas paas."
+    else:
+        rishta_list = "\n".join([f"- {p['name']} (Age: {p['age']})" for p in matched_rishtas])
+
     message = (
-        f"Assalam u Alaikum! \n"
-        f"Name: {name}\n"
+        f"Assalam u Alaikum!  💌\n"
+        f"Apka Naam: {name}\n"
         f"Age: {age}\n"
         f"Gender: {gender}\n"
-        f"City: Karachi\n"
-        f"Background: Educated, Middle-Class\n"
-        f"Profession: Software Engineer\n"
-        f"📞 Contact back for more info!\n"
+        f"📍 City: Karachi\n\n"
+        f"🔎 Matching Rishtay:\n{rishta_list}\n\n"
+        f"📞 Contact for more info!\n"
         f"JazakAllah ❤️"
     )
 
@@ -53,7 +83,7 @@ def send_rishta_details(name, phone, age, gender):
     response = requests.post(url, json=payload)
     return response
 
-# Page Config
+# Streamlit UI Setup
 st.set_page_config(page_title="Rishta App", page_icon="💍", layout="centered")
 
 # Custom CSS
@@ -75,10 +105,6 @@ st.markdown("""
             to { width: 100% }
         }
 
-       
-
-       
-
         @keyframes slide {
             from {transform: translateY(30px); opacity: 0;}
             to {transform: translateY(0); opacity: 1;}
@@ -89,29 +115,7 @@ st.markdown("""
             color: gray;
             font-size: 12px;
         }
-    </style>
-""", unsafe_allow_html=True)
 
-# Header with typewriter effect
-st.markdown("<h1 class='typewriter'>💍 Welcome to My Rishta App</h1>", unsafe_allow_html=True)
-
-# Card Box Start
-st.markdown("<div class='card-box'>", unsafe_allow_html=True)
-
-# Centered Image
-st.markdown("""
-    <div style="text-align: center;">
-        <img 
-            src="https://t4.ftcdn.net/jpg/13/42/94/23/360_F_1342942305_I2u6JyECgnfLECvVzRTfqlcOX1nVA6hW.jpg" 
-            width="500" 
-            style="border-radius: 10px;"
-        />
-    </div>
-""", unsafe_allow_html=True)
-
-# 🎨 Fancy Form Start
-st.markdown("""
-    <style>
         .form-input {
             background-color: #fff0f5;
             padding: 8px 10px;
@@ -146,6 +150,21 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+# Header
+st.markdown("<h1 class='typewriter'>💍 Welcome to My Rishta App</h1>", unsafe_allow_html=True)
+
+# Centered Image
+st.markdown("""
+    <div style="text-align: center;">
+        <img 
+            src="https://t4.ftcdn.net/jpg/13/42/94/23/360_F_1342942305_I2u6JyECgnfLECvVzRTfqlcOX1nVA6hW.jpg" 
+            width="500" 
+            style="border-radius: 10px;"
+        />
+    </div>
+""", unsafe_allow_html=True)
+
+# Form
 with st.form("rishta_form"):
     st.markdown('<label class="form-label">👤 Your Name</label>', unsafe_allow_html=True)
     name = st.text_input("", key="name_input")
@@ -175,10 +194,6 @@ with st.form("rishta_form"):
             """, unsafe_allow_html=True)
         else:
             st.error("❌ Something went wrong. Please check your number or try again.")
-
-
-# Card Box End
-st.markdown("</div>", unsafe_allow_html=True)
 
 # Footer
 st.markdown("---")
