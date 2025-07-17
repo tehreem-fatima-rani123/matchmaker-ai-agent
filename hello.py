@@ -96,7 +96,7 @@ def send_rishta_details(name, phone, age, gender):
         rishta_list = "\n".join([f"- {p['name']} (Age: {p['age']})" for p in matched_rishtas])
 
     message = (
-        f"💌 Rishta Match Result 💌\n"
+        f"Assalam u Alaikum! \n"
         f"Apka Naam: {name}\n"
         f"Age: {age}\n"
         f"Gender: {gender}\n"
