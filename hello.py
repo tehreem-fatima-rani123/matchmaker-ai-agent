@@ -10,8 +10,8 @@ load_dotenv()
 INSTANCE_ID = os.getenv("INSTANCE_ID")
 TOKEN = os.getenv("TOKEN")
 
-# Rishta list
-people = [
+# Separate male and female rishtas
+male_rishtas = [
     {"name": "Muneeb", "age": 22},
     {"name": "Muhammad Ubaid Hussain", "age": 25},
     {"name": "Azan", "age": 19},
@@ -34,7 +34,36 @@ people = [
     {"name": "Salman", "age": 26}
 ]
 
-# Save to CSV
+female_rishtas = female_rishtas = [
+    {"name": "Ayesha", "age": 22},
+    {"name": "Fatima", "age": 24},
+    {"name": "Zara", "age": 23},
+    {"name": "Hira", "age": 21},
+    {"name": "Amna", "age": 25},
+    {"name": "Iqra", "age": 20},
+    {"name": "Mariam", "age": 26},
+    {"name": "Noor", "age": 19},
+    {"name": "Aleena", "age": 22},
+    {"name": "Mahnoor", "age": 24},
+    {"name": "Sana", "age": 23},
+    {"name": "Laiba", "age": 21},
+    {"name": "Mehwish", "age": 25},
+    {"name": "Emaan", "age": 20},
+    {"name": "Areeba", "age": 22},
+    {"name": "Komal", "age": 26},
+    {"name": "Nimra", "age": 24},
+    {"name": "Bushra", "age": 23},
+    {"name": "Huma", "age": 19},
+    {"name": "Anum", "age": 25},
+    {"name": "Sadia", "age": 21},
+    {"name": "Kiran", "age": 20},
+    {"name": "Sumaira", "age": 26},
+    {"name": "Tuba", "age": 22},
+    {"name": "Tehreem Fatima", "age": 18}
+]
+
+
+# Save data to CSV
 def save_to_csv(name, phone, age, gender):
     data = {
         "name": [name],
@@ -49,13 +78,17 @@ def save_to_csv(name, phone, age, gender):
     else:
         df.to_csv("submissions.csv", index=False)
 
-# Send WhatsApp Message
+# Send WhatsApp message
 def send_rishta_details(name, phone, age, gender):
     if not phone.startswith("+"):
         st.error("❌ Phone number must start with + (e.g., +923001234567)")
         return None
 
-    matched_rishtas = [p for p in people if abs(p["age"] - age) <= 2]
+    # Gender-based matching
+    if gender == "Male":
+        matched_rishtas = [p for p in female_rishtas if abs(p["age"] - age) <= 2]
+    else:
+        matched_rishtas = [p for p in male_rishtas if abs(p["age"] - age) <= 2]
 
     if not matched_rishtas:
         rishta_list = "😔 Koi rishta nahi mila aapki age ke aas paas."
@@ -63,7 +96,7 @@ def send_rishta_details(name, phone, age, gender):
         rishta_list = "\n".join([f"- {p['name']} (Age: {p['age']})" for p in matched_rishtas])
 
     message = (
-        f"Assalam u Alaikum!  💌\n"
+        f"💌 Rishta Match Result 💌\n"
         f"Apka Naam: {name}\n"
         f"Age: {age}\n"
         f"Gender: {gender}\n"
@@ -83,7 +116,7 @@ def send_rishta_details(name, phone, age, gender):
     response = requests.post(url, json=payload)
     return response
 
-# Streamlit UI Setup
+# Streamlit App Config
 st.set_page_config(page_title="Rishta App", page_icon="💍", layout="centered")
 
 # Custom CSS
@@ -153,7 +186,7 @@ st.markdown("""
 # Header
 st.markdown("<h1 class='typewriter'>💍 Welcome to My Rishta App</h1>", unsafe_allow_html=True)
 
-# Centered Image
+# Image
 st.markdown("""
     <div style="text-align: center;">
         <img 
