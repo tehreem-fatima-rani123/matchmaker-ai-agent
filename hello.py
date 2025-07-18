@@ -59,7 +59,6 @@ female_rishtas = female_rishtas = [
     {"name": "Kiran", "age": 20},
     {"name": "Sumaira", "age": 26},
     {"name": "Tuba", "age": 22},
-    {"name": "Tehreem Fatima", "age": 18}
 ]
 
 
